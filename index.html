@@ -839,243 +839,88 @@
   }
 
   /* ═══════════════════════════════════════════════════════
-     COVER — invitation opening screen
+     COVER — immersive floral opening screen
   ═══════════════════════════════════════════════════════ */
   #cover {
     position: fixed;
     inset: 0;
     z-index: 10001;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(160deg, #5a2232 0%, #3a1220 100%);
+    background: radial-gradient(ellipse 90% 80% at 50% 50%, #3a0e1a 0%, #1a060d 100%);
     overflow: hidden;
-    transition: opacity .9s ease;
+    cursor: pointer;
+    transition: opacity 1s ease;
   }
   #cover.fading { opacity: 0; pointer-events: none; }
-
-  /* Soft ambient glow blobs */
   #cover::before {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(ellipse 55% 40% at 25% 40%, rgba(201,149,108,.12) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 45% at 75% 60%, rgba(240,192,187,.09) 0%, transparent 60%);
+    background: radial-gradient(ellipse 55% 55% at 50% 50%, rgba(139,69,81,.25) 0%, transparent 70%);
     pointer-events: none;
   }
-
-  /* Pulsing decorative rings */
   .cov-ring {
     position: absolute;
     border-radius: 50%;
     border: 1px solid rgba(201,149,108,.12);
-    transform: translate(-50%, -50%);
     top: 50%; left: 50%;
-    animation: covRing 4s ease-in-out infinite;
+    transform: translate(-50%,-50%);
+    animation: covRing 5.5s ease-in-out infinite;
   }
   @keyframes covRing {
-    0%, 100% { transform: translate(-50%,-50%) scale(1);    opacity: .45; }
-    50%       { transform: translate(-50%,-50%) scale(1.07); opacity: .15; }
+    0%, 100% { transform: translate(-50%,-50%) scale(1);     opacity: .3;  }
+    50%       { transform: translate(-50%,-50%) scale(1.06);  opacity: .08; }
   }
-
-  /* ── The card ── */
-  #cov-card {
+  .cov-floral {
     position: relative;
-    width: min(320px, 86vw);
-    height: min(490px, 76vh);
-    perspective: 1400px;
-    cursor: pointer;
-    user-select: none;
+    width: min(440px, 85vw);
+    height: min(440px, 85vw);
+    animation: floralBloom 2.2s cubic-bezier(.34,1.3,.64,1) both,
+               floralBreathe 6s ease-in-out 2.2s infinite;
+    will-change: transform, opacity;
   }
-
-  /* Door panels */
-  .cov-door {
-    position: absolute;
-    top: 0;
-    width: 50%;
-    height: 100%;
-    transform-style: preserve-3d;
-    transition: transform 1.15s cubic-bezier(.42, 0, .18, 1);
+  @keyframes floralBloom {
+    from { opacity: 0; transform: scale(.5) rotate(-12deg); }
+    to   { opacity: 1; transform: scale(1)  rotate(0deg);   }
   }
-  .cov-door-l { left:  0; transform-origin: left  center; border-radius: 4px 0 0 4px; }
-  .cov-door-r { right: 0; transform-origin: right center; border-radius: 0 4px 4px 0; }
-
-  .cov-door-face {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(160deg, #fefaf7 0%, #fde9e3 60%, #f6d2ca 100%);
-    overflow: hidden;
+  @keyframes floralBreathe {
+    0%, 100% { transform: scale(1);    }
+    50%       { transform: scale(1.03); }
   }
-  .cov-door-l .cov-door-face { border-radius: 4px 0 0 4px; }
-  .cov-door-r .cov-door-face { border-radius: 0 4px 4px 0; }
-
-  /* Edge shadow so panels look 3-D even before rotating */
-  .cov-door-l .cov-door-face::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to left, rgba(139,69,81,.08) 0%, transparent 30%);
-  }
-  .cov-door-r .cov-door-face::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, rgba(139,69,81,.08) 0%, transparent 30%);
-  }
-
-  /* Horizontal seam line */
-  .cov-seam {
-    position: absolute;
-    left: 50%; top: 0;
-    transform: translateX(-50%);
-    width: 1px;
-    height: 100%;
-    background: linear-gradient(to bottom, transparent 0%, rgba(139,69,81,.22) 30%, rgba(139,69,81,.22) 70%, transparent 100%);
-    z-index: 5;
-    pointer-events: none;
-  }
-
-  /* Open state: doors swing out */
-  #cov-card.open .cov-door-l { transform: rotateY(-172deg); transition-delay: .28s; }
-  #cov-card.open .cov-door-r { transform: rotateY( 172deg); transition-delay: .28s; }
-
-  /* Content overlay (names, seal, button) */
-  .cov-content {
-    position: absolute;
-    inset: 0;
-    z-index: 6;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  .cov-floral svg { width: 100%; height: 100%; overflow: visible; }
+  .cov-tap {
+    margin-top: 24px;
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: .55rem;
+    letter-spacing: .6em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.22);
+    animation: tapFade 3s ease-in-out 2.5s infinite both;
     text-align: center;
-    padding: 28px 22px;
-    transition: opacity .35s ease;
   }
-  .cov-content.gone { opacity: 0; pointer-events: none; }
-
-  /* Inner frame border */
-  .cov-frame {
-    position: absolute;
-    inset: 12px;
-    border: 1px solid rgba(139,69,81,.2);
-    border-radius: 2px;
-    pointer-events: none;
+  @keyframes tapFade {
+    0%, 100% { opacity: .22; }
+    50%       { opacity: .65; }
   }
-
-  /* Corner mini SVGs */
-  .cov-corner {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    opacity: .5;
+  #cover.opening .cov-floral {
+    transform: scale(2.2) !important;
+    opacity: 0 !important;
+    transition: transform 1.3s cubic-bezier(.4,0,.2,1),
+                opacity   .9s ease .15s;
+    animation: none !important;
   }
-  .cov-c-tl { top: 0; left: 0; }
-  .cov-c-tr { top: 0; right: 0; transform: scaleX(-1); }
-  .cov-c-bl { bottom: 0; left: 0; transform: scaleY(-1); }
-  .cov-c-br { bottom: 0; right: 0; transform: scale(-1); }
-
-  /* Wax seal */
-  .cov-seal {
-    width: 66px;
-    height: 66px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 38% 33%, #d4b080, #8b4551 68%);
-    border: 2px solid rgba(255,255,255,.28);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 18px;
-    box-shadow: 0 4px 20px rgba(139,69,81,.45), inset 0 1px 3px rgba(255,255,255,.18);
-    cursor: pointer;
-    transition: transform .85s cubic-bezier(.4,0,.2,1), box-shadow .3s;
-    pointer-events: all;
+  #cover.opening .cov-ring,
+  #cover.opening .cov-tap {
+    opacity: 0 !important;
+    transition: opacity .3s ease;
   }
-  .cov-seal:hover { box-shadow: 0 7px 30px rgba(139,69,81,.6), inset 0 1px 3px rgba(255,255,255,.18); }
-  .cov-seal.spin  { transform: rotate(360deg); }
-
-  .cov-seal-initials {
-    font-family: var(--script);
-    font-size: 1.45rem;
-    color: rgba(255,255,255,.88);
-    line-height: 1;
-  }
-
-  .cov-eyebrow {
-    font-family: var(--sans);
-    font-weight: 300;
-    font-size: .58rem;
-    letter-spacing: .5em;
-    text-transform: uppercase;
-    color: var(--rg-dark);
-    margin-bottom: 12px;
-  }
-
-  .cov-names {
-    font-family: var(--script);
-    font-size: clamp(2.4rem, 9vw, 3.8rem);
-    color: var(--deep);
-    line-height: .9;
-  }
-  .cov-amp {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: clamp(.95rem, 3vw, 1.2rem);
-    color: var(--rg);
-    display: block;
-    margin: 8px 0;
-    letter-spacing: .12em;
-  }
-
-  .cov-date {
-    font-size: clamp(.75rem, 2.3vw, .88rem);
-    font-weight: 300;
-    letter-spacing: .22em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 14px 0 22px;
-  }
-
-  .cov-btn {
-    pointer-events: all;
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    background: transparent;
-    border: 1px solid rgba(139,69,81,.55);
-    color: var(--deep);
-    padding: 11px 26px;
-    font-family: var(--sans);
-    font-weight: 300;
-    font-size: .65rem;
-    letter-spacing: .4em;
-    text-transform: uppercase;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: background .25s, color .25s, border-color .25s;
-  }
-  .cov-btn:hover { background: var(--deep); color: #fff; border-color: var(--deep); }
-  .cov-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
-
-  /* Tap hint text below card */
-  .cov-tap-hint {
-    position: absolute;
-    bottom: -36px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    font-family: var(--sans);
-    font-weight: 300;
-    font-size: .58rem;
-    letter-spacing: .4em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.3);
-    animation: hintFade 2.5s ease-in-out infinite;
-  }
-  @keyframes hintFade {
-    0%, 100% { opacity: .3; }
-    50%       { opacity: .7; }
+  @media (orientation: landscape) and (max-height: 500px) {
+    .cov-floral { width: min(300px, 72vh); height: min(300px, 72vh); }
+    .cov-tap    { margin-top: 10px; font-size: .5rem; }
   }
   </style>
 </head>
@@ -1086,104 +931,142 @@
 <div id="petals"></div>
 
 <!-- ══════════════════════════════════════════════════════
-     COVER — interactive card opening screen
+     COVER — immersive floral opening screen
 ══════════════════════════════════════════════════════ -->
 <div id="cover">
 
   <!-- Ambient pulsing rings -->
-  <div class="cov-ring" style="width:280px;height:280px;animation-delay:0s"></div>
-  <div class="cov-ring" style="width:460px;height:460px;animation-delay:1.2s"></div>
-  <div class="cov-ring" style="width:640px;height:640px;animation-delay:2.4s"></div>
+  <div class="cov-ring" style="width:260px;height:260px;animation-delay:0s"></div>
+  <div class="cov-ring" style="width:460px;height:460px;animation-delay:1.8s"></div>
+  <div class="cov-ring" style="width:660px;height:660px;animation-delay:3.6s"></div>
 
-  <!-- The invitation card -->
-  <div id="cov-card">
+  <!-- Floral wreath (SVG) -->
+  <div class="cov-floral">
+    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Small rose -->
+        <g id="rs">
+          <g transform="rotate(0)"><ellipse cx="0" cy="-10" rx="6.5" ry="11" fill="#e8b0bc" opacity=".83"/></g>
+          <g transform="rotate(72)"><ellipse cx="0" cy="-10" rx="6.5" ry="11" fill="#e8b0bc" opacity=".83"/></g>
+          <g transform="rotate(144)"><ellipse cx="0" cy="-10" rx="6.5" ry="11" fill="#e8b0bc" opacity=".83"/></g>
+          <g transform="rotate(216)"><ellipse cx="0" cy="-10" rx="6.5" ry="11" fill="#e8b0bc" opacity=".83"/></g>
+          <g transform="rotate(288)"><ellipse cx="0" cy="-10" rx="6.5" ry="11" fill="#e8b0bc" opacity=".83"/></g>
+          <g transform="rotate(36)"><ellipse cx="0" cy="-6.5" rx="4.5" ry="8.5" fill="#d09098" opacity=".88"/></g>
+          <g transform="rotate(108)"><ellipse cx="0" cy="-6.5" rx="4.5" ry="8.5" fill="#d09098" opacity=".88"/></g>
+          <g transform="rotate(180)"><ellipse cx="0" cy="-6.5" rx="4.5" ry="8.5" fill="#d09098" opacity=".88"/></g>
+          <g transform="rotate(252)"><ellipse cx="0" cy="-6.5" rx="4.5" ry="8.5" fill="#d09098" opacity=".88"/></g>
+          <g transform="rotate(324)"><ellipse cx="0" cy="-6.5" rx="4.5" ry="8.5" fill="#d09098" opacity=".88"/></g>
+          <circle r="5" fill="#8b4551" opacity=".9"/>
+          <circle r="2.2" fill="#c8a97e"/>
+        </g>
+        <!-- Accent bud -->
+        <g id="rb">
+          <g transform="rotate(0)"><ellipse cx="0" cy="-6" rx="4" ry="7" fill="#f0c8d0" opacity=".72"/></g>
+          <g transform="rotate(90)"><ellipse cx="0" cy="-6" rx="4" ry="7" fill="#f0c8d0" opacity=".72"/></g>
+          <g transform="rotate(180)"><ellipse cx="0" cy="-6" rx="4" ry="7" fill="#f0c8d0" opacity=".72"/></g>
+          <g transform="rotate(270)"><ellipse cx="0" cy="-6" rx="4" ry="7" fill="#f0c8d0" opacity=".72"/></g>
+          <circle r="3" fill="#8b4551" opacity=".8"/>
+          <circle r="1.4" fill="#c8a97e" opacity=".9"/>
+        </g>
+      </defs>
 
-    <!-- Left door panel -->
-    <div class="cov-door cov-door-l">
-      <div class="cov-door-face"></div>
-    </div>
+      <!-- Outer decorative rings -->
+      <circle cx="250" cy="250" r="224" stroke="rgba(200,169,126,0.1)"  stroke-width="1"   fill="none"/>
+      <circle cx="250" cy="250" r="210" stroke="rgba(200,169,126,0.07)" stroke-width=".6"  fill="none" stroke-dasharray="3 14"/>
 
-    <!-- Right door panel -->
-    <div class="cov-door cov-door-r">
-      <div class="cov-door-face"></div>
-    </div>
+      <!-- Vine ring (8 arcs) -->
+      <path d="M 250 82  C 295 73 343 93 370 130"  stroke="#9b7868" stroke-width="1.9" fill="none" opacity=".55"/>
+      <path d="M 370 130 C 410 158 422 205 418 250" stroke="#9b7868" stroke-width="1.9" fill="none" opacity=".55"/>
+      <path d="M 418 250 C 422 295 405 340 370 370" stroke="#9b7868" stroke-width="1.9" fill="none" opacity=".55"/>
+      <path d="M 370 370 C 340 410 296 422 250 418" stroke="#9b7868" stroke-width="1.9" fill="none" opacity=".55"/>
+      <path d="M 250 418 C 204 422 158 410 130 370" stroke="#9b7868" stroke-width="1.9" fill="none" opacity=".55"/>
+      <path d="M 130 370 C 95 340 78 295 82 250"   stroke="#9b7868" stroke-width="1.9" fill="none" opacity=".55"/>
+      <path d="M 82 250  C 78 205 95 158 130 130"  stroke="#9b7868" stroke-width="1.9" fill="none" opacity=".55"/>
+      <path d="M 130 130 C 158 93 205 73 250 82"   stroke="#9b7868" stroke-width="1.9" fill="none" opacity=".55"/>
 
-    <!-- Center seam -->
-    <div class="cov-seam"></div>
+      <!-- Inner tendrils to center -->
+      <path d="M 250 82  C 248 140 250 190 250 250" stroke="#9b7868" stroke-width=".9" fill="none" opacity=".2"/>
+      <path d="M 418 250 C 360 252 310 250 250 250" stroke="#9b7868" stroke-width=".9" fill="none" opacity=".2"/>
+      <path d="M 250 418 C 252 360 250 310 250 250" stroke="#9b7868" stroke-width=".9" fill="none" opacity=".2"/>
+      <path d="M 82 250  C 140 248 190 250 250 250" stroke="#9b7868" stroke-width=".9" fill="none" opacity=".2"/>
+      <path d="M 370 130 C 335 168 295 208 250 250" stroke="#9b7868" stroke-width=".8" fill="none" opacity=".17"/>
+      <path d="M 370 370 C 330 330 290 290 250 250" stroke="#9b7868" stroke-width=".8" fill="none" opacity=".17"/>
+      <path d="M 130 370 C 168 332 208 292 250 250" stroke="#9b7868" stroke-width=".8" fill="none" opacity=".17"/>
+      <path d="M 130 130 C 168 168 208 208 250 250" stroke="#9b7868" stroke-width=".8" fill="none" opacity=".17"/>
 
-    <!-- Foreground content: corners, seal, names, button -->
-    <div class="cov-content" id="covContent">
-      <div class="cov-frame"></div>
+      <!-- Leaf pairs on vines -->
+      <ellipse cx="312" cy="103" rx="3.5" ry="9" fill="#6b5030" opacity=".45" transform="rotate(32,312,103)"/>
+      <ellipse cx="323" cy="109" rx="3"   ry="8" fill="#6b5030" opacity=".38" transform="rotate(48,323,109)"/>
+      <ellipse cx="418" cy="192" rx="3.5" ry="9" fill="#6b5030" opacity=".45" transform="rotate(88,418,192)"/>
+      <ellipse cx="414" cy="210" rx="3"   ry="8" fill="#6b5030" opacity=".38" transform="rotate(82,414,210)"/>
+      <ellipse cx="396" cy="310" rx="3.5" ry="9" fill="#6b5030" opacity=".45" transform="rotate(130,396,310)"/>
+      <ellipse cx="384" cy="322" rx="3"   ry="8" fill="#6b5030" opacity=".38" transform="rotate(145,384,322)"/>
+      <ellipse cx="310" cy="394" rx="3.5" ry="9" fill="#6b5030" opacity=".45" transform="rotate(152,310,394)"/>
+      <ellipse cx="290" cy="398" rx="3"   ry="8" fill="#6b5030" opacity=".38" transform="rotate(162,290,398)"/>
+      <ellipse cx="190" cy="394" rx="3.5" ry="9" fill="#6b5030" opacity=".45" transform="rotate(-152,190,394)"/>
+      <ellipse cx="104" cy="310" rx="3.5" ry="9" fill="#6b5030" opacity=".45" transform="rotate(-130,104,310)"/>
+      <ellipse cx="116" cy="322" rx="3"   ry="8" fill="#6b5030" opacity=".38" transform="rotate(-145,116,322)"/>
+      <ellipse cx="82"  cy="192" rx="3.5" ry="9" fill="#6b5030" opacity=".45" transform="rotate(-88,82,192)"/>
+      <ellipse cx="86"  cy="210" rx="3"   ry="8" fill="#6b5030" opacity=".38" transform="rotate(-82,86,210)"/>
+      <ellipse cx="188" cy="103" rx="3.5" ry="9" fill="#6b5030" opacity=".45" transform="rotate(-32,188,103)"/>
+      <ellipse cx="177" cy="109" rx="3"   ry="8" fill="#6b5030" opacity=".38" transform="rotate(-48,177,109)"/>
 
-      <!-- Corner florals -->
-      <svg class="cov-corner cov-c-tl" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M2 2 C 16 2 28 2 36 14" stroke="#8b4551" stroke-width="1" opacity=".5"/>
-        <path d="M2 2 C 2 16 2 28 14 36" stroke="#8b4551" stroke-width="1" opacity=".5"/>
-        <circle cx="18" cy="18" r="5.5" fill="#f0c0bb" opacity=".65"/>
-        <circle cx="18" cy="18" r="3" fill="#8b4551" opacity=".7"/>
-        <path d="M18 24 Q 12 32 8 38" stroke="#9b7060" stroke-width=".9" opacity=".4"/>
-        <circle cx="34" cy="10" r="3" fill="#f0c0bb" opacity=".5"/>
-        <circle cx="34" cy="10" r="1.5" fill="#8b4551" opacity=".6"/>
-        <circle cx="10" cy="34" r="3" fill="#f0c0bb" opacity=".5"/>
-        <circle cx="10" cy="34" r="1.5" fill="#8b4551" opacity=".6"/>
-      </svg>
-      <svg class="cov-corner cov-c-tr" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M2 2 C 16 2 28 2 36 14" stroke="#8b4551" stroke-width="1" opacity=".5"/>
-        <path d="M2 2 C 2 16 2 28 14 36" stroke="#8b4551" stroke-width="1" opacity=".5"/>
-        <circle cx="18" cy="18" r="5.5" fill="#f0c0bb" opacity=".65"/>
-        <circle cx="18" cy="18" r="3" fill="#8b4551" opacity=".7"/>
-        <path d="M18 24 Q 12 32 8 38" stroke="#9b7060" stroke-width=".9" opacity=".4"/>
-        <circle cx="34" cy="10" r="3" fill="#f0c0bb" opacity=".5"/>
-        <circle cx="34" cy="10" r="1.5" fill="#8b4551" opacity=".6"/>
-        <circle cx="10" cy="34" r="3" fill="#f0c0bb" opacity=".5"/>
-        <circle cx="10" cy="34" r="1.5" fill="#8b4551" opacity=".6"/>
-      </svg>
-      <svg class="cov-corner cov-c-bl" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M2 2 C 16 2 28 2 36 14" stroke="#8b4551" stroke-width="1" opacity=".5"/>
-        <path d="M2 2 C 2 16 2 28 14 36" stroke="#8b4551" stroke-width="1" opacity=".5"/>
-        <circle cx="18" cy="18" r="5.5" fill="#f0c0bb" opacity=".65"/>
-        <circle cx="18" cy="18" r="3" fill="#8b4551" opacity=".7"/>
-        <circle cx="34" cy="10" r="3" fill="#f0c0bb" opacity=".5"/>
-        <circle cx="34" cy="10" r="1.5" fill="#8b4551" opacity=".6"/>
-        <circle cx="10" cy="34" r="3" fill="#f0c0bb" opacity=".5"/>
-        <circle cx="10" cy="34" r="1.5" fill="#8b4551" opacity=".6"/>
-      </svg>
-      <svg class="cov-corner cov-c-br" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M2 2 C 16 2 28 2 36 14" stroke="#8b4551" stroke-width="1" opacity=".5"/>
-        <path d="M2 2 C 2 16 2 28 14 36" stroke="#8b4551" stroke-width="1" opacity=".5"/>
-        <circle cx="18" cy="18" r="5.5" fill="#f0c0bb" opacity=".65"/>
-        <circle cx="18" cy="18" r="3" fill="#8b4551" opacity=".7"/>
-        <circle cx="34" cy="10" r="3" fill="#f0c0bb" opacity=".5"/>
-        <circle cx="34" cy="10" r="1.5" fill="#8b4551" opacity=".6"/>
-        <circle cx="10" cy="34" r="3" fill="#f0c0bb" opacity=".5"/>
-        <circle cx="10" cy="34" r="1.5" fill="#8b4551" opacity=".6"/>
-      </svg>
+      <!-- 8 main roses -->
+      <use href="#rs" transform="translate(250,80)"/>
+      <use href="#rs" transform="translate(370,130)"/>
+      <use href="#rs" transform="translate(418,250)"/>
+      <use href="#rs" transform="translate(370,370)"/>
+      <use href="#rs" transform="translate(250,420)"/>
+      <use href="#rs" transform="translate(130,370)"/>
+      <use href="#rs" transform="translate(82,250)"/>
+      <use href="#rs" transform="translate(130,130)"/>
 
-      <!-- Wax seal -->
-      <div class="cov-seal" id="covSeal">
-        <span class="cov-seal-initials">P&amp;M</span>
-      </div>
+      <!-- 8 accent buds -->
+      <use href="#rb" transform="translate(290,153)"/>
+      <use href="#rb" transform="translate(347,210)"/>
+      <use href="#rb" transform="translate(347,290)"/>
+      <use href="#rb" transform="translate(290,347)"/>
+      <use href="#rb" transform="translate(210,347)"/>
+      <use href="#rb" transform="translate(153,290)"/>
+      <use href="#rb" transform="translate(153,210)"/>
+      <use href="#rb" transform="translate(210,153)"/>
 
-      <p class="cov-eyebrow">&#9670; &ensp; Wedding Invitation &ensp; &#9670;</p>
+      <!-- Large center rose -->
+      <g transform="translate(250,250)">
+        <g transform="rotate(0)"><ellipse cx="0" cy="-20" rx="12" ry="22" fill="#f0c0c0" opacity=".68"/></g>
+        <g transform="rotate(72)"><ellipse cx="0" cy="-20" rx="12" ry="22" fill="#f0c0c0" opacity=".68"/></g>
+        <g transform="rotate(144)"><ellipse cx="0" cy="-20" rx="12" ry="22" fill="#f0c0c0" opacity=".68"/></g>
+        <g transform="rotate(216)"><ellipse cx="0" cy="-20" rx="12" ry="22" fill="#f0c0c0" opacity=".68"/></g>
+        <g transform="rotate(288)"><ellipse cx="0" cy="-20" rx="12" ry="22" fill="#f0c0c0" opacity=".68"/></g>
+        <g transform="rotate(36)"><ellipse cx="0" cy="-13" rx="9" ry="16" fill="#e0a0a8" opacity=".76"/></g>
+        <g transform="rotate(108)"><ellipse cx="0" cy="-13" rx="9" ry="16" fill="#e0a0a8" opacity=".76"/></g>
+        <g transform="rotate(180)"><ellipse cx="0" cy="-13" rx="9" ry="16" fill="#e0a0a8" opacity=".76"/></g>
+        <g transform="rotate(252)"><ellipse cx="0" cy="-13" rx="9" ry="16" fill="#e0a0a8" opacity=".76"/></g>
+        <g transform="rotate(324)"><ellipse cx="0" cy="-13" rx="9" ry="16" fill="#e0a0a8" opacity=".76"/></g>
+        <g transform="rotate(18)"><ellipse cx="0" cy="-8" rx="6.5" ry="12" fill="#c88090" opacity=".82"/></g>
+        <g transform="rotate(90)"><ellipse cx="0" cy="-8" rx="6.5" ry="12" fill="#c88090" opacity=".82"/></g>
+        <g transform="rotate(162)"><ellipse cx="0" cy="-8" rx="6.5" ry="12" fill="#c88090" opacity=".82"/></g>
+        <g transform="rotate(234)"><ellipse cx="0" cy="-8" rx="6.5" ry="12" fill="#c88090" opacity=".82"/></g>
+        <g transform="rotate(306)"><ellipse cx="0" cy="-8" rx="6.5" ry="12" fill="#c88090" opacity=".82"/></g>
+        <circle r="9"   fill="#8b4551" opacity=".92"/>
+        <circle r="4.5" fill="#c8a97e"/>
+        <circle r="2.2" fill="#e8d5b0"/>
+      </g>
 
-      <div class="cov-names">
-        Priya
-        <span class="cov-amp">&amp;</span>
-        Monish
-      </div>
+      <!-- Gold accent dots -->
+      <circle cx="250" cy="58"  r="3.2" fill="rgba(200,169,126,0.55)"/>
+      <circle cx="442" cy="250" r="3.2" fill="rgba(200,169,126,0.55)"/>
+      <circle cx="250" cy="442" r="3.2" fill="rgba(200,169,126,0.55)"/>
+      <circle cx="58"  cy="250" r="3.2" fill="rgba(200,169,126,0.55)"/>
+      <circle cx="364" cy="112" r="2.2" fill="rgba(200,169,126,0.4)"/>
+      <circle cx="388" cy="388" r="2.2" fill="rgba(200,169,126,0.4)"/>
+      <circle cx="112" cy="388" r="2.2" fill="rgba(200,169,126,0.4)"/>
+      <circle cx="112" cy="112" r="2.2" fill="rgba(200,169,126,0.4)"/>
+    </svg>
+  </div>
 
-      <p class="cov-date">6th December 2026</p>
+  <p class="cov-tap">&#x2736;&ensp;tap anywhere to open&ensp;&#x2736;</p>
 
-      <button class="cov-btn" id="covBtn">
-        Open Invitation
-        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-    </div><!-- /cov-content -->
-
-    <!-- Tap hint -->
-    <p class="cov-tap-hint">tap anywhere to open</p>
-
-  </div><!-- /cov-card -->
 </div><!-- /cover -->
 
 <!-- ── Section nav dots ── -->
@@ -1619,47 +1502,21 @@
 })();
 /* ── Cover opening animation ─────────────────────── */
 ;(function () {
-  const cover   = document.getElementById('cover');
-  const card    = document.getElementById('cov-card');
-  const content = document.getElementById('covContent');
-  const btn     = document.getElementById('covBtn');
-  const seal    = document.getElementById('covSeal');
-
+  const cover = document.getElementById('cover');
   let opened = false;
 
   function openInvitation() {
     if (opened) return;
     opened = true;
-
-    // Lock out further clicks
-    btn.disabled = true;
-    btn.style.pointerEvents = 'none';
-
-    // 1. Spin the wax seal (clock-like rotation)
-    seal.classList.add('spin');
-
-    // 2. Fade out content text while seal finishes spinning
-    setTimeout(() => content.classList.add('gone'), 650);
-
-    // 3. Swing the two door panels open
-    setTimeout(() => card.classList.add('open'), 940);
-
-    // 4. Fade out the whole cover screen
-    setTimeout(() => cover.classList.add('fading'), 2100);
-
-    // 5. Remove from DOM, restore scroll
+    cover.classList.add('opening');
+    setTimeout(() => cover.classList.add('fading'), 900);
     setTimeout(() => {
       cover.remove();
       document.body.style.overflow = '';
-    }, 3000);
+    }, 2000);
   }
 
-  // Trigger on button, seal, or anywhere on the card
-  btn.addEventListener('click',  (e) => { e.stopPropagation(); openInvitation(); });
-  seal.addEventListener('click', (e) => { e.stopPropagation(); openInvitation(); });
-  card.addEventListener('click', openInvitation);
-
-  // Block background scroll while cover is showing
+  cover.addEventListener('click', openInvitation);
   document.body.style.overflow = 'hidden';
 })();
 
