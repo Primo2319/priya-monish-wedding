@@ -843,196 +843,140 @@
   ═══════════════════════════════════════════════════════ */
   #cover {
     position: fixed; inset: 0; z-index: 10001;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    background: radial-gradient(ellipse 90% 80% at 50% 50%,
-      #4a0808 0%, #1a0202 100%);
-    overflow: hidden;
-    cursor: pointer;
-    transition: opacity .85s ease;
+    overflow: hidden; cursor: pointer;
+    background: #120202;
+    transition: opacity .7s ease .4s;
   }
   #cover.fading { opacity: 0; pointer-events: none; }
 
-  /* ── Envelope outer ─────────────────────────────── */
-  .env-outer {
-    position: relative;
-    width: min(360px, 88vw);
-  }
-
-  /* ── Envelope card ──────────────────────────────── */
-  .env-body {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    border-radius: 4px;
+  /* ── Two rose panels ────────────────────────────── */
+  .cvr-panel {
+    position: absolute; top: 0; bottom: 0; width: 50%;
     overflow: hidden;
     will-change: transform;
-    box-shadow:
-      0 28px 80px rgba(0,0,0,.65),
-      0  5px 16px rgba(0,0,0,.4),
-      inset 0 0 0 1.5px rgba(232,213,176,.22);
+    transition: transform 1s cubic-bezier(.77,0,.18,1);
   }
-
-  /* Inside (cream, revealed when flap collapses) */
-  .env-inside {
+  .cvr-left {
+    left: 0;
+    background: linear-gradient(90deg, #100202 0%, #380606 55%, #480a0a 100%);
+  }
+  .cvr-right {
+    right: 0;
+    background: linear-gradient(-90deg, #100202 0%, #380606 55%, #480a0a 100%);
+  }
+  .cvr-svg {
     position: absolute; inset: 0;
-    background: linear-gradient(160deg, #fff9f9 0%, #fff5f5 100%);
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 5px;
-    padding: 12px 24px;
-  }
-  .env-inside-txt {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: clamp(.68rem, 2.6vw, .84rem);
-    font-style: italic; font-weight: 300;
-    color: #b71c1c; letter-spacing: .12em; text-align: center;
-  }
-  .env-inside-names {
-    font-family: 'Great Vibes', cursive;
-    font-size: clamp(1.5rem, 5.5vw, 2rem);
-    color: #b71c1c; line-height: 1;
-  }
-  .env-inside-rule {
-    width: 56px; height: 1px;
-    background: linear-gradient(90deg, transparent, #c8a97e, transparent);
-    margin: 4px auto;
-  }
-
-  /* Bottom & side fold triangles */
-  .env-fold-b {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    height: 55%;
-    background: linear-gradient(175deg, #ffecec 0%, #ffe0e0 100%);
-    clip-path: polygon(0 100%, 100% 100%, 50% 0%);
-  }
-  .env-fold-l {
-    position: absolute; top: 0; left: 0; bottom: 0; width: 50%;
-    background: linear-gradient(100deg, #ffecec 0%, #fff5f5 100%);
-    clip-path: polygon(0 0, 0 100%, 100% 50%);
-  }
-  .env-fold-r {
-    position: absolute; top: 0; right: 0; bottom: 0; width: 50%;
-    background: linear-gradient(260deg, #ffecec 0%, #fff5f5 100%);
-    clip-path: polygon(100% 0, 100% 100%, 0% 50%);
-  }
-
-  /* ── Top flap — collapses upward smoothly ──────── */
-  .env-flap-wrap {
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 56%;
-    overflow: hidden;   /* hides flap as it slides up */
-    z-index: 4;
-  }
-  .env-flap {
-    position: absolute; inset: 0;
-    background: linear-gradient(190deg, #c62828 0%, #b71c1c 50%, #7f0000 100%);
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    transform-origin: 50% 0%;
-    transition: transform .8s cubic-bezier(.4,0,.2,1),
-                opacity   .6s ease .1s;
-    will-change: transform, opacity;
-  }
-  /* Subtle gold edge on flap */
-  .env-flap-svg {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    pointer-events: none; overflow: visible;
-  }
-  /* Flap opens: collapses up and fades */
-  .env-flap.open {
-    transform: scaleY(0);
-    opacity: 0;
-  }
-
-  /* ── Wax seal — heart shape ─────────────────────── */
-  .env-seal-pos {
-    position: absolute;
-    left: 50%; top: 53%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    will-change: transform, opacity;
-    transition: transform .4s cubic-bezier(.4,0,.2,1),
-                opacity   .3s ease;
-  }
-  #cover.fading .env-seal-pos { opacity: 0; }
-  .env-seal {
-    position: relative;
-    width: 82px; height: 76px;
-    transform: rotate(-8deg);
-    animation: sealIn .65s cubic-bezier(.34,1.4,.64,1) .5s both,
-               sealPulse 4s ease-in-out 1.3s infinite;
-    filter: drop-shadow(0 5px 16px rgba(0,0,0,.55))
-            drop-shadow(0 2px 4px rgba(0,0,0,.35));
-  }
-  .seal-heart-svg {
     width: 100%; height: 100%;
-    display: block;
-  }
-  .seal-text {
-    position: absolute;
-    left: 50%; top: 50%;
-    transform: translate(-50%, -48%);
-    text-align: center;
     pointer-events: none;
   }
-  .env-seal-pm {
+  /* Mirror right panel roses to the inner edge */
+  .cvr-right .cvr-svg { transform: scaleX(-1); }
+
+  /* Panels slide apart on open */
+  #cover.open .cvr-left  { transform: translateX(-100%); }
+  #cover.open .cvr-right { transform: translateX(100%);  }
+
+  /* Gold seam at center */
+  .cvr-seam {
+    position: absolute; top: 0; bottom: 0; left: 50%;
+    width: 1px; transform: translateX(-.5px);
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(200,169,126,.55) 15%,
+      rgba(232,213,176,.85) 50%,
+      rgba(200,169,126,.55) 85%,
+      transparent 100%);
+    z-index: 5; pointer-events: none;
+  }
+
+  /* ── Center text + seal overlay ─────────────────── */
+  .cvr-center {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 8; pointer-events: none; gap: 2px;
+  }
+  .cvr-names {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.2rem, 8.5vw, 3.4rem);
+    color: #f0dfc0; line-height: 1;
+    text-shadow: 0 2px 20px rgba(0,0,0,.7), 0 0 50px rgba(200,80,80,.3);
+    margin-bottom: 6px;
+  }
+  .cvr-date {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300; font-size: clamp(.54rem, 2vw, .7rem);
+    letter-spacing: .42em; text-transform: uppercase;
+    color: rgba(232,213,176,.45);
+    margin-bottom: 18px;
+  }
+
+  /* ── Heart wax seal ─────────────────────────────── */
+  .cvr-seal-wrap { position: relative; pointer-events: auto; }
+  .cvr-seal {
+    position: relative; width: 90px; height: 84px;
+    transform: rotate(-8deg);
+    animation: cSealIn   .65s cubic-bezier(.34,1.4,.64,1) .7s both,
+               cSealPulse  4s ease-in-out               1.5s infinite;
+    filter: drop-shadow(0 5px 22px rgba(0,0,0,.65))
+            drop-shadow(0 2px 7px  rgba(0,0,0,.4));
+  }
+  .cvr-seal-svg { width: 100%; height: 100%; display: block; }
+  .cvr-seal-text {
+    position: absolute; left: 50%; top: 52%;
+    transform: translate(-50%, -48%);
+    text-align: center; pointer-events: none;
+  }
+  .cvr-seal-pm {
     display: block;
     font-family: 'Great Vibes', cursive;
-    font-size: 1.35rem;
-    color: #e8d5b0;
-    line-height: 1;
-    text-shadow: 0 1px 4px rgba(0,0,0,.45);
+    font-size: 1.45rem; color: #e8d5b0; line-height: 1;
+    text-shadow: 0 1px 5px rgba(0,0,0,.5);
   }
-  .env-seal-rule {
-    width: 26px; height: 1px;
+  .cvr-seal-hr {
+    width: 28px; height: 1px; margin: 2px auto;
     background: linear-gradient(90deg, transparent, #c8a97e, transparent);
-    margin: 2px auto;
   }
-  .env-seal-sub {
+  .cvr-seal-yr {
     display: block;
     font-family: 'Lato', sans-serif; font-weight: 300;
-    font-size: .36rem; letter-spacing: .35em;
-    text-transform: uppercase;
+    font-size: .38rem; letter-spacing: .35em; text-transform: uppercase;
     color: rgba(232,213,176,.6);
   }
-  @keyframes sealIn {
-    from { transform: rotate(-8deg) scale(0); opacity: 0; }
-    to   { transform: rotate(-8deg) scale(1); opacity: 1; }
+  @keyframes cSealIn {
+    from { transform: rotate(-8deg) scale(0);   opacity: 0; }
+    to   { transform: rotate(-8deg) scale(1);   opacity: 1; }
   }
-  @keyframes sealPulse {
-    0%, 100% { transform: rotate(-8deg) scale(1);    filter: drop-shadow(0 5px 16px rgba(0,0,0,.55)) drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
-    50%       { transform: rotate(-8deg) scale(1.05); filter: drop-shadow(0 6px 22px rgba(183,28,28,.45)) drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
+  @keyframes cSealPulse {
+    0%,100% { transform: rotate(-8deg) scale(1);    filter: drop-shadow(0 5px 22px rgba(0,0,0,.65)) drop-shadow(0 2px 7px rgba(0,0,0,.4)); }
+    50%     { transform: rotate(-8deg) scale(1.06); filter: drop-shadow(0 6px 28px rgba(183,28,28,.5)) drop-shadow(0 2px 7px rgba(0,0,0,.4)); }
   }
-  /* Spin-away when opening */
-  .env-seal.spinning {
-    animation: sealSpin .5s cubic-bezier(.4,0,.6,1) both !important;
+  .cvr-seal.spinning {
+    animation: cSealSpin .52s cubic-bezier(.4,0,.6,1) both !important;
+    filter: none;
   }
-  @keyframes sealSpin {
-    0%   { transform: rotate(-8deg)   scale(1);    opacity: 1; }
-    35%  { transform: rotate(-8deg)   scale(1.18); opacity: 1; }
-    100% { transform: rotate(-368deg) scale(0);    opacity: 0; }
+  @keyframes cSealSpin {
+    0%   { transform: rotate(  -8deg) scale(1);   opacity: 1; }
+    35%  { transform: rotate(  -8deg) scale(1.2); opacity: 1; }
+    100% { transform: rotate(-368deg) scale(0);   opacity: 0; }
   }
 
   /* ── Tap hint ────────────────────────────────────── */
-  .env-tap {
-    margin-top: 24px;
-    text-align: center;
-    font-family: 'Lato', sans-serif;
-    font-weight: 300; font-size: .52rem;
-    letter-spacing: .55em; text-transform: uppercase;
-    color: rgba(255,200,200,.32);
-    animation: tapGlow 3s ease-in-out .9s infinite;
+  .cvr-tap {
+    position: absolute; bottom: clamp(20px, 5vh, 44px);
+    left: 0; right: 0; text-align: center;
+    font-family: 'Lato', sans-serif; font-weight: 300;
+    font-size: .52rem; letter-spacing: .55em; text-transform: uppercase;
+    color: rgba(255,200,200,.28); z-index: 9; pointer-events: none;
+    animation: cTapGlow 3s ease-in-out 1.5s infinite;
   }
-  @keyframes tapGlow {
-    0%, 100% { opacity: .32; }
-    50%       { opacity: .72; }
-  }
+  @keyframes cTapGlow { 0%,100%{opacity:.28} 50%{opacity:.72} }
 
-  /* Landscape phone */
-  @media (orientation: landscape) and (max-height: 500px) {
-    .env-outer { width: min(270px, 58vw); }
-    .env-seal  { width: 66px; height: 60px; }
-    .env-seal-pm { font-size: 1.05rem; }
-    .env-tap   { margin-top: 12px; }
+  @media (orientation:landscape) and (max-height:500px) {
+    .cvr-names   { font-size: clamp(1.6rem,5vw,2.4rem); margin-bottom:3px; }
+    .cvr-date    { margin-bottom: 10px; font-size:.5rem; }
+    .cvr-seal    { width: 68px; height: 62px; }
+    .cvr-seal-pm { font-size: 1.1rem; }
   }
   </style>
 </head>
@@ -1047,84 +991,141 @@
 ══════════════════════════════════════════════════════ -->
 <div id="cover">
 
-  <div class="env-outer" id="envOuter">
+  <!-- Left rose panel -->
+  <div class="cvr-panel cvr-left" id="cvrLeft">
+    <svg class="cvr-svg" viewBox="0 0 200 900" preserveAspectRatio="xMaxYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <!-- Vine along inner edge -->
+  <path d="M172,0 C168,90 181,190 172,310 C165,390 180,470 172,590 C166,670 179,750 171,900"
+        fill="none" stroke="#5a1a1a" stroke-width="2.5" opacity=".5"/>
 
-    <div class="env-body">
+  <!-- Vine leaves -->
+  <ellipse cx="176" cy="185" rx="6" ry="14" fill="#4a1515" opacity=".75" transform="rotate(-28,176,185)"/> <ellipse cx="170" cy="191" rx="5" ry="12" fill="#4a1515" opacity=".75" transform="rotate(22,170,191)"/>
+  <ellipse cx="174" cy="365" rx="6" ry="15" fill="#4a1515" opacity=".75" transform="rotate(24,174,365)"/> <ellipse cx="168" cy="374" rx="5" ry="12" fill="#4a1515" opacity=".75" transform="rotate(-16,168,374)"/>
+  <ellipse cx="175" cy="545" rx="6" ry="14" fill="#4a1515" opacity=".75" transform="rotate(-20,175,545)"/> <ellipse cx="169" cy="554" rx="5" ry="11" fill="#4a1515" opacity=".75" transform="rotate(32,169,554)"/>
+  <ellipse cx="173" cy="728" rx="6" ry="14" fill="#4a1515" opacity=".75" transform="rotate(16,173,728)"/> <ellipse cx="168" cy="735" rx="5" ry="12" fill="#4a1515" opacity=".75" transform="rotate(-26,168,735)"/>
 
-      <!-- Inside (cream, shown once flap collapses) -->
-      <div class="env-inside">
-        <p class="env-inside-txt">You are cordially invited</p>
-        <div class="env-inside-rule"></div>
-        <p class="env-inside-names">Priya &amp; Monish</p>
-        <div class="env-inside-rule"></div>
-        <p class="env-inside-txt">6th December 2026</p>
-      </div>
+  <!-- Top rose cluster -->
+  <ellipse cx="118" cy="94" rx="11" ry="26" fill="#4a1515" opacity=".75" transform="rotate(-52,118,94)"/>
+  <ellipse cx="152" cy="68" rx="9" ry="21" fill="#4a1515" opacity=".75" transform="rotate(12,152,68)"/>
+  <ellipse cx="100" cy="120" rx="10" ry="23" fill="#4a1515" opacity=".75" transform="rotate(-66,100,120)"/>
+  <g transform="translate(140,100) rotate(-12) scale(1.12)"><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(0)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(72)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(216)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(36)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(108)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(180)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(252)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(324)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(288)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(36)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(108)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(252)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(324)"/><circle r="5" fill="#6a0000"/><circle cx="-1.5" cy="-1.5" r="2" fill="rgba(255,160,160,.18)"/></g>
+  <g transform="translate(74,160) rotate(22) scale(0.72)"><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(0)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(72)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(216)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(36)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(108)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(180)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(252)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(324)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(288)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(36)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(108)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(252)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(324)"/><circle r="5" fill="#6a0000"/><circle cx="-1.5" cy="-1.5" r="2" fill="rgba(255,160,160,.18)"/></g>
+  <g transform="translate(176,58) rotate(-8) scale(0.88)"><ellipse cx="0" cy="-9" rx="7" ry="11" fill="#8b0000"/><ellipse cx="0" cy="-6" rx="5" ry="8"  fill="#c62828"/><ellipse cx="0" cy="-3" rx="3" ry="5"  fill="#e53935"/><path d="M-6,-1 C-3,-5 0,-14 0,-14 C0,-14 3,-5 6,-1 Z" fill="#4a1515"/></g>
+  <g transform="translate(114,52) rotate(18) scale(0.74)"><ellipse cx="0" cy="-9" rx="7" ry="11" fill="#8b0000"/><ellipse cx="0" cy="-6" rx="5" ry="8"  fill="#c62828"/><ellipse cx="0" cy="-3" rx="3" ry="5"  fill="#e53935"/><path d="M-6,-1 C-3,-5 0,-14 0,-14 C0,-14 3,-5 6,-1 Z" fill="#4a1515"/></g>
 
-      <!-- Fold triangles -->
-      <div class="env-fold-b"></div>
-      <div class="env-fold-l"></div>
-      <div class="env-fold-r"></div>
+  <!-- Mid rose -->
+  <g transform="translate(86,392) rotate(-18) scale(0.66)"><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(0)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(72)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(216)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(36)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(108)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(180)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(252)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(324)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(288)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(36)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(108)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(252)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(324)"/><circle r="5" fill="#6a0000"/><circle cx="-1.5" cy="-1.5" r="2" fill="rgba(255,160,160,.18)"/></g>
+  <g transform="translate(154,328) rotate(14) scale(0.7)"><ellipse cx="0" cy="-9" rx="7" ry="11" fill="#8b0000"/><ellipse cx="0" cy="-6" rx="5" ry="8"  fill="#c62828"/><ellipse cx="0" cy="-3" rx="3" ry="5"  fill="#e53935"/><path d="M-6,-1 C-3,-5 0,-14 0,-14 C0,-14 3,-5 6,-1 Z" fill="#4a1515"/></g>
+  <ellipse cx="82" cy="360" rx="8" ry="18" fill="#4a1515" opacity=".75" transform="rotate(-42,82,360)"/>
+  <ellipse cx="104" cy="408" rx="7" ry="16" fill="#4a1515" opacity=".75" transform="rotate(32,104,408)"/>
 
-      <!-- Crease & border lines -->
-      <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 360 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="0"   y1="240" x2="180" y2="108" stroke="rgba(200,80,80,0.15)" stroke-width="1"/>
-        <line x1="360" y1="240" x2="180" y2="108" stroke="rgba(200,80,80,0.15)" stroke-width="1"/>
-        <line x1="0"   y1="0"   x2="180" y2="108" stroke="rgba(200,80,80,0.12)" stroke-width="1"/>
-        <line x1="360" y1="0"   x2="180" y2="108" stroke="rgba(200,80,80,0.12)" stroke-width="1"/>
-        <rect x="1.5" y="1.5" width="357" height="237" rx="3" fill="none" stroke="rgba(232,213,176,0.28)" stroke-width="1.5"/>
-      </svg>
+  <!-- Bottom rose cluster -->
+  <ellipse cx="132" cy="736" rx="10" ry="25" fill="#4a1515" opacity=".75" transform="rotate(44,132,736)"/>
+  <ellipse cx="166" cy="766" rx="8" ry="20" fill="#4a1515" opacity=".75" transform="rotate(-14,166,766)"/>
+  <ellipse cx="107" cy="760" rx="9" ry="22" fill="#4a1515" opacity=".75" transform="rotate(64,107,760)"/>
+  <g transform="translate(146,752) rotate(8) scale(1.06)"><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(0)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(72)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(216)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(36)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(108)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(180)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(252)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(324)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(288)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(36)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(108)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(252)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(324)"/><circle r="5" fill="#6a0000"/><circle cx="-1.5" cy="-1.5" r="2" fill="rgba(255,160,160,.18)"/></g>
+  <g transform="translate(73,702) rotate(-20) scale(0.68)"><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(0)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(72)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(216)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(36)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(108)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(180)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(252)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(324)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(288)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(36)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(108)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(252)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(324)"/><circle r="5" fill="#6a0000"/><circle cx="-1.5" cy="-1.5" r="2" fill="rgba(255,160,160,.18)"/></g>
+  <g transform="translate(174,785) rotate(6) scale(0.86)"><ellipse cx="0" cy="-9" rx="7" ry="11" fill="#8b0000"/><ellipse cx="0" cy="-6" rx="5" ry="8"  fill="#c62828"/><ellipse cx="0" cy="-3" rx="3" ry="5"  fill="#e53935"/><path d="M-6,-1 C-3,-5 0,-14 0,-14 C0,-14 3,-5 6,-1 Z" fill="#4a1515"/></g>
+  <g transform="translate(106,675) rotate(-22) scale(0.7)"><ellipse cx="0" cy="-9" rx="7" ry="11" fill="#8b0000"/><ellipse cx="0" cy="-6" rx="5" ry="8"  fill="#c62828"/><ellipse cx="0" cy="-3" rx="3" ry="5"  fill="#e53935"/><path d="M-6,-1 C-3,-5 0,-14 0,-14 C0,-14 3,-5 6,-1 Z" fill="#4a1515"/></g>
 
-      <!-- Top flap -->
-      <div class="env-flap-wrap">
-        <div class="env-flap" id="envFlap">
-          <svg class="env-flap-svg" viewBox="0 0 360 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <polyline points="2,2 358,2 180,198" fill="none" stroke="rgba(232,213,176,0.35)" stroke-width="1.5" stroke-linejoin="round"/>
-            <circle cx="20"  cy="16" r="2.5" fill="rgba(232,213,176,0.45)"/>
-            <circle cx="340" cy="16" r="2.5" fill="rgba(232,213,176,0.45)"/>
-          </svg>
-        </div>
-      </div>
+  <!-- Fallen petals -->
+  <ellipse cx="42" cy="256" rx="4" ry="7" fill="#c62828" opacity="0.22" transform="rotate(-18,42,256)"/>  <ellipse cx="89" cy="318" rx="4" ry="7" fill="#c62828" opacity="0.18" transform="rotate(38,89,318)"/>
+  <ellipse cx="130" cy="428" rx="4" ry="7" fill="#c62828" opacity="0.22" transform="rotate(52,130,428)"/>  <ellipse cx="52" cy="477" rx="4" ry="7" fill="#c62828" opacity="0.18" transform="rotate(-32,52,477)"/>
+  <ellipse cx="98" cy="568" rx="4" ry="7" fill="#c62828" opacity="0.22" transform="rotate(22,98,568)"/>  <ellipse cx="150" cy="618" rx="4" ry="7" fill="#c62828" opacity="0.22" transform="rotate(-14,150,618)"/>
+  <ellipse cx="56" cy="646" rx="4" ry="7" fill="#c62828" opacity="0.18" transform="rotate(42,56,646)"/> <ellipse cx="118" cy="502" rx="4" ry="7" fill="#c62828" opacity="0.18" transform="rotate(-48,118,502)"/>
 
-    </div><!-- /env-body -->
+  <!-- Gold shimmer dots on vine -->
+  <circle cx="190" cy="148" r="1.5" fill="#c8a97e" opacity=".4"/>
+  <circle cx="188" cy="360" r="1.2" fill="#c8a97e" opacity=".35"/>
+  <circle cx="190" cy="550" r="1.5" fill="#c8a97e" opacity=".4"/>
+  <circle cx="188" cy="755" r="1.2" fill="#c8a97e" opacity=".35"/>
+</svg>
+  </div>
 
-    <!-- Heart wax seal -->
-    <div class="env-seal-pos">
-      <div class="env-seal" id="envSeal">
-        <!-- Heart SVG shape -->
-        <svg class="seal-heart-svg" viewBox="0 0 100 92" xmlns="http://www.w3.org/2000/svg">
+  <!-- Right rose panel (SVG mirrored via CSS scaleX(-1)) -->
+  <div class="cvr-panel cvr-right" id="cvrRight">
+    <svg class="cvr-svg" viewBox="0 0 200 900" preserveAspectRatio="xMaxYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <!-- Vine along inner edge -->
+  <path d="M172,0 C168,90 181,190 172,310 C165,390 180,470 172,590 C166,670 179,750 171,900"
+        fill="none" stroke="#5a1a1a" stroke-width="2.5" opacity=".5"/>
+
+  <!-- Vine leaves -->
+  <ellipse cx="176" cy="185" rx="6" ry="14" fill="#4a1515" opacity=".75" transform="rotate(-28,176,185)"/> <ellipse cx="170" cy="191" rx="5" ry="12" fill="#4a1515" opacity=".75" transform="rotate(22,170,191)"/>
+  <ellipse cx="174" cy="365" rx="6" ry="15" fill="#4a1515" opacity=".75" transform="rotate(24,174,365)"/> <ellipse cx="168" cy="374" rx="5" ry="12" fill="#4a1515" opacity=".75" transform="rotate(-16,168,374)"/>
+  <ellipse cx="175" cy="545" rx="6" ry="14" fill="#4a1515" opacity=".75" transform="rotate(-20,175,545)"/> <ellipse cx="169" cy="554" rx="5" ry="11" fill="#4a1515" opacity=".75" transform="rotate(32,169,554)"/>
+  <ellipse cx="173" cy="728" rx="6" ry="14" fill="#4a1515" opacity=".75" transform="rotate(16,173,728)"/> <ellipse cx="168" cy="735" rx="5" ry="12" fill="#4a1515" opacity=".75" transform="rotate(-26,168,735)"/>
+
+  <!-- Top rose cluster -->
+  <ellipse cx="118" cy="94" rx="11" ry="26" fill="#4a1515" opacity=".75" transform="rotate(-52,118,94)"/>
+  <ellipse cx="152" cy="68" rx="9" ry="21" fill="#4a1515" opacity=".75" transform="rotate(12,152,68)"/>
+  <ellipse cx="100" cy="120" rx="10" ry="23" fill="#4a1515" opacity=".75" transform="rotate(-66,100,120)"/>
+  <g transform="translate(140,100) rotate(-12) scale(1.12)"><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(0)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(72)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(216)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(36)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(108)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(180)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(252)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(324)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(288)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(36)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(108)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(252)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(324)"/><circle r="5" fill="#6a0000"/><circle cx="-1.5" cy="-1.5" r="2" fill="rgba(255,160,160,.18)"/></g>
+  <g transform="translate(74,160) rotate(22) scale(0.72)"><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(0)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(72)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(216)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(36)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(108)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(180)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(252)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(324)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(288)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(36)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(108)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(252)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(324)"/><circle r="5" fill="#6a0000"/><circle cx="-1.5" cy="-1.5" r="2" fill="rgba(255,160,160,.18)"/></g>
+  <g transform="translate(176,58) rotate(-8) scale(0.88)"><ellipse cx="0" cy="-9" rx="7" ry="11" fill="#8b0000"/><ellipse cx="0" cy="-6" rx="5" ry="8"  fill="#c62828"/><ellipse cx="0" cy="-3" rx="3" ry="5"  fill="#e53935"/><path d="M-6,-1 C-3,-5 0,-14 0,-14 C0,-14 3,-5 6,-1 Z" fill="#4a1515"/></g>
+  <g transform="translate(114,52) rotate(18) scale(0.74)"><ellipse cx="0" cy="-9" rx="7" ry="11" fill="#8b0000"/><ellipse cx="0" cy="-6" rx="5" ry="8"  fill="#c62828"/><ellipse cx="0" cy="-3" rx="3" ry="5"  fill="#e53935"/><path d="M-6,-1 C-3,-5 0,-14 0,-14 C0,-14 3,-5 6,-1 Z" fill="#4a1515"/></g>
+
+  <!-- Mid rose -->
+  <g transform="translate(86,392) rotate(-18) scale(0.66)"><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(0)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(72)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(216)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(36)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(108)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(180)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(252)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(324)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(288)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(36)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(108)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(252)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(324)"/><circle r="5" fill="#6a0000"/><circle cx="-1.5" cy="-1.5" r="2" fill="rgba(255,160,160,.18)"/></g>
+  <g transform="translate(154,328) rotate(14) scale(0.7)"><ellipse cx="0" cy="-9" rx="7" ry="11" fill="#8b0000"/><ellipse cx="0" cy="-6" rx="5" ry="8"  fill="#c62828"/><ellipse cx="0" cy="-3" rx="3" ry="5"  fill="#e53935"/><path d="M-6,-1 C-3,-5 0,-14 0,-14 C0,-14 3,-5 6,-1 Z" fill="#4a1515"/></g>
+  <ellipse cx="82" cy="360" rx="8" ry="18" fill="#4a1515" opacity=".75" transform="rotate(-42,82,360)"/>
+  <ellipse cx="104" cy="408" rx="7" ry="16" fill="#4a1515" opacity=".75" transform="rotate(32,104,408)"/>
+
+  <!-- Bottom rose cluster -->
+  <ellipse cx="132" cy="736" rx="10" ry="25" fill="#4a1515" opacity=".75" transform="rotate(44,132,736)"/>
+  <ellipse cx="166" cy="766" rx="8" ry="20" fill="#4a1515" opacity=".75" transform="rotate(-14,166,766)"/>
+  <ellipse cx="107" cy="760" rx="9" ry="22" fill="#4a1515" opacity=".75" transform="rotate(64,107,760)"/>
+  <g transform="translate(146,752) rotate(8) scale(1.06)"><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(0)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(72)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(216)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(36)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(108)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(180)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(252)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(324)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(288)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(36)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(108)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(252)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(324)"/><circle r="5" fill="#6a0000"/><circle cx="-1.5" cy="-1.5" r="2" fill="rgba(255,160,160,.18)"/></g>
+  <g transform="translate(73,702) rotate(-20) scale(0.68)"><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(0)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(72)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(144)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(216)"/><ellipse cx="0" cy="-22" rx="13" ry="22" fill="#8b0000" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(36)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(108)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(180)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(252)"/><ellipse cx="0" cy="-17" rx="11" ry="17" fill="#c62828" transform="rotate(324)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(0)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="8" ry="11" fill="#e53935" transform="rotate(288)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(36)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(108)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(180)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(252)"/><ellipse cx="0" cy="-7" rx="5" ry="7" fill="#ef5350" transform="rotate(324)"/><circle r="5" fill="#6a0000"/><circle cx="-1.5" cy="-1.5" r="2" fill="rgba(255,160,160,.18)"/></g>
+  <g transform="translate(174,785) rotate(6) scale(0.86)"><ellipse cx="0" cy="-9" rx="7" ry="11" fill="#8b0000"/><ellipse cx="0" cy="-6" rx="5" ry="8"  fill="#c62828"/><ellipse cx="0" cy="-3" rx="3" ry="5"  fill="#e53935"/><path d="M-6,-1 C-3,-5 0,-14 0,-14 C0,-14 3,-5 6,-1 Z" fill="#4a1515"/></g>
+  <g transform="translate(106,675) rotate(-22) scale(0.7)"><ellipse cx="0" cy="-9" rx="7" ry="11" fill="#8b0000"/><ellipse cx="0" cy="-6" rx="5" ry="8"  fill="#c62828"/><ellipse cx="0" cy="-3" rx="3" ry="5"  fill="#e53935"/><path d="M-6,-1 C-3,-5 0,-14 0,-14 C0,-14 3,-5 6,-1 Z" fill="#4a1515"/></g>
+
+  <!-- Fallen petals -->
+  <ellipse cx="42" cy="256" rx="4" ry="7" fill="#c62828" opacity="0.22" transform="rotate(-18,42,256)"/>  <ellipse cx="89" cy="318" rx="4" ry="7" fill="#c62828" opacity="0.18" transform="rotate(38,89,318)"/>
+  <ellipse cx="130" cy="428" rx="4" ry="7" fill="#c62828" opacity="0.22" transform="rotate(52,130,428)"/>  <ellipse cx="52" cy="477" rx="4" ry="7" fill="#c62828" opacity="0.18" transform="rotate(-32,52,477)"/>
+  <ellipse cx="98" cy="568" rx="4" ry="7" fill="#c62828" opacity="0.22" transform="rotate(22,98,568)"/>  <ellipse cx="150" cy="618" rx="4" ry="7" fill="#c62828" opacity="0.22" transform="rotate(-14,150,618)"/>
+  <ellipse cx="56" cy="646" rx="4" ry="7" fill="#c62828" opacity="0.18" transform="rotate(42,56,646)"/> <ellipse cx="118" cy="502" rx="4" ry="7" fill="#c62828" opacity="0.18" transform="rotate(-48,118,502)"/>
+
+  <!-- Gold shimmer dots on vine -->
+  <circle cx="190" cy="148" r="1.5" fill="#c8a97e" opacity=".4"/>
+  <circle cx="188" cy="360" r="1.2" fill="#c8a97e" opacity=".35"/>
+  <circle cx="190" cy="550" r="1.5" fill="#c8a97e" opacity=".4"/>
+  <circle cx="188" cy="755" r="1.2" fill="#c8a97e" opacity=".35"/>
+</svg>
+  </div>
+
+  <!-- Glowing seam line -->
+  <div class="cvr-seam"></div>
+
+  <!-- Centered: names, date, heart seal -->
+  <div class="cvr-center">
+    <span class="cvr-names">Priya &amp; Monish</span>
+    <span class="cvr-date">6 &middot; December &middot; 2026</span>
+    <div class="cvr-seal-wrap">
+      <div class="cvr-seal" id="cvrSeal">
+        <svg class="cvr-seal-svg" viewBox="0 0 100 92" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="hg" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="hg3" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%"   stop-color="#e53935"/>
               <stop offset="100%" stop-color="#8b0000"/>
             </linearGradient>
           </defs>
-          <!-- Heart fill -->
           <path d="M50,28 C50,24 45,10 29,10 C13,10 2,22 2,36 C2,62 28,80 50,90 C72,80 98,62 98,36 C98,22 87,10 71,10 C55,10 50,24 50,28 Z"
-                fill="url(#hg)"/>
-          <!-- Gold outer ring -->
+                fill="url(#hg3)"/>
           <path d="M50,28 C50,24 45,10 29,10 C13,10 2,22 2,36 C2,62 28,80 50,90 C72,80 98,62 98,36 C98,22 87,10 71,10 C55,10 50,24 50,28 Z"
-                fill="none" stroke="#c8a97e" stroke-width="2.2" opacity=".7"/>
-          <!-- Inner thin ring -->
+                fill="none" stroke="#c8a97e" stroke-width="2.2" opacity=".75"/>
           <path d="M50,31 C50,28 46,16 32,16 C19,16 9,26 9,38 C9,60 32,77 50,86 C68,77 91,60 91,38 C91,26 81,16 68,16 C54,16 50,28 50,31 Z"
-                fill="none" stroke="rgba(232,213,176,0.25)" stroke-width="1"/>
-          <!-- Sunburst lines from center -->
-          <line x1="50" y1="20" x2="50" y2="48" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-          <line x1="35" y1="28" x2="65" y2="58" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
-          <line x1="65" y1="28" x2="35" y2="58" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
-          <line x1="20" y1="42" x2="80" y2="42" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
+                fill="none" stroke="rgba(232,213,176,.2)" stroke-width="1"/>
         </svg>
-        <!-- Text overlay -->
-        <div class="seal-text">
-          <span class="env-seal-pm">P&amp;M</span>
-          <div class="env-seal-rule"></div>
-          <span class="env-seal-sub">2026</span>
+        <div class="cvr-seal-text">
+          <span class="cvr-seal-pm">P&amp;M</span>
+          <div class="cvr-seal-hr"></div>
+          <span class="cvr-seal-yr">2026</span>
         </div>
       </div>
     </div>
+  </div>
 
-    <p class="env-tap">&#x2764;&ensp;tap to open&ensp;&#x2764;</p>
-
-  </div><!-- /env-outer -->
+  <p class="cvr-tap">&#x2764;&ensp;tap to open&ensp;&#x2764;</p>
 
 </div><!-- /cover -->
 
@@ -1562,28 +1563,17 @@
 /* ── Cover opening animation ─────────────────────── */
 ;(function () {
   const cover = document.getElementById('cover');
-  const flap  = document.getElementById('envFlap');
-  const seal  = document.getElementById('envSeal');
+  const seal  = document.getElementById('cvrSeal');
   let opened = false;
 
   function openInvitation() {
     if (opened) return;
     opened = true;
-
-    // 1. Seal bounces then spins away
+    // Seal spins away, then both panels slide apart simultaneously
     seal.classList.add('spinning');
-
-    // 2. Flap collapses upward (smooth, 2D only - no 3D stutter)
-    setTimeout(() => flap.classList.add('open'), 380);
-
-    // 3. Entire cover fades out after flap finishes
-    setTimeout(() => cover.classList.add('fading'), 1350);
-
-    // 4. Remove from DOM
-    setTimeout(() => {
-      cover.remove();
-      document.body.style.overflow = '';
-    }, 2300);
+    setTimeout(() => cover.classList.add('open'),   400);
+    setTimeout(() => cover.classList.add('fading'), 1500);
+    setTimeout(() => { cover.remove(); document.body.style.overflow = ''; }, 2500);
   }
 
   cover.addEventListener('click', openInvitation);
