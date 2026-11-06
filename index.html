@@ -1509,40 +1509,51 @@
   var START = 81; // 1 min 21 sec
   var ON  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M16.5 8.8a4.5 4.5 0 0 1 0 6.4M19 6.3a8 8 0 0 1 0 11.4"/></svg>';
   var OFF = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M16.5 9.5l5 5M21.5 9.5l-5 5"/></svg>';
-  var playing = false;
+  var playing = false, pending = false;
+
   function render(){ btn.innerHTML = (playing && !bgm.muted) ? ON : OFF; }
-  function doPlay(){
+
+  function tryPlay(){
     var p = bgm.play();
-    if (p && p.then) p.then(function(){ playing = true; render(); }).catch(function(){});
+    if (p && p.then) p.then(function(){ playing = true; render(); }).catch(function(){ playing = false; render(); });
     else { playing = true; render(); }
   }
-  function start(){
-    bgm.muted = false;
-    bgm.currentTime = START;
-    doPlay();
-  }
-  // loop back to 1:21 on song end
-  bgm.addEventListener('ended', function(){
-    bgm.currentTime = START; bgm.play().catch(function(){});
+
+  // fired once seek is confirmed complete — THEN start playback
+  bgm.addEventListener('seeked', function(){
+    if (!pending) return;
+    pending = false;
+    tryPlay();
   });
-  // try autoplay as soon as metadata is ready (seek to 1:21 then play)
-  bgm.addEventListener('loadedmetadata', function(){
-    bgm.currentTime = START;
+
+  function seekAndPlay(){
     bgm.muted = false;
-    var auto = bgm.play();
-    if (auto && auto.then) {
-      auto.then(function(){ playing = true; render(); }).catch(function(){ playing = false; render(); });
+    // if already at the right spot (e.g. after autoplay seek), just play
+    if (Math.abs(bgm.currentTime - START) < 0.5) {
+      tryPlay();
+    } else {
+      pending = true;
+      bgm.currentTime = START; // seeked event fires play() once done
     }
-  }, {once: true});
-  // fallback: start on first user gesture (covers browsers that block autoplay)
-  document.addEventListener('click', function once(){ if (!playing) start(); }, { once: true });
+  }
+
+  // loop: on song end, seek back to 1:21
+  bgm.addEventListener('ended', function(){ seekAndPlay(); });
+
+  // try autoplay: seek first, play after seek confirms
+  bgm.addEventListener('loadedmetadata', function(){ seekAndPlay(); }, {once: true});
+
+  // fallback: first tap/click if autoplay was blocked
+  document.addEventListener('click', function once(){ if (!playing) seekAndPlay(); }, { once: true });
+
   btn.addEventListener('click', function(e){
     e.stopPropagation();
-    if (!playing){ start(); return; }
+    if (!playing){ seekAndPlay(); return; }
     bgm.muted = !bgm.muted;
     if (bgm.paused && !bgm.muted){ bgm.play().catch(function(){}); }
     render();
   });
+
   render();
 })();
 </script>
