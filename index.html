@@ -1497,7 +1497,7 @@
 })();
 </script>
 <!-- ═══ Background music ═══ -->
-<audio id="bgm" loop preload="auto">
+<audio id="bgm" preload="auto">
   <source src="bgm.mp3" type="audio/mpeg"/>
 </audio>
 <button id="bgm-toggle" type="button" aria-label="Toggle music"></button>
@@ -1506,18 +1506,41 @@
   var bgm = document.getElementById('bgm');
   var btn = document.getElementById('bgm-toggle');
   if (!bgm || !btn) return;
+  var START = 81; // 1 min 21 sec
   var ON  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M16.5 8.8a4.5 4.5 0 0 1 0 6.4M19 6.3a8 8 0 0 1 0 11.4"/></svg>';
   var OFF = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M16.5 9.5l5 5M21.5 9.5l-5 5"/></svg>';
   var playing = false;
   function render(){ btn.innerHTML = (playing && !bgm.muted) ? ON : OFF; }
-  function start(){ bgm.muted = false; var p = bgm.play(); if (p && p.catch) p.catch(function(){}); playing = true; render(); }
-  // start on first user gesture anywhere (e.g. the cover "Click here")
+  function doPlay(){
+    var p = bgm.play();
+    if (p && p.then) p.then(function(){ playing = true; render(); }).catch(function(){});
+    else { playing = true; render(); }
+  }
+  function start(){
+    bgm.muted = false;
+    bgm.currentTime = START;
+    doPlay();
+  }
+  // loop back to 1:21 on song end
+  bgm.addEventListener('ended', function(){
+    bgm.currentTime = START; bgm.play().catch(function(){});
+  });
+  // try autoplay as soon as metadata is ready (seek to 1:21 then play)
+  bgm.addEventListener('loadedmetadata', function(){
+    bgm.currentTime = START;
+    bgm.muted = false;
+    var auto = bgm.play();
+    if (auto && auto.then) {
+      auto.then(function(){ playing = true; render(); }).catch(function(){ playing = false; render(); });
+    }
+  }, {once: true});
+  // fallback: start on first user gesture (covers browsers that block autoplay)
   document.addEventListener('click', function once(){ if (!playing) start(); }, { once: true });
-  btn.addEventListener('click', function (e) {
+  btn.addEventListener('click', function(e){
     e.stopPropagation();
-    if (!playing) { start(); return; }
+    if (!playing){ start(); return; }
     bgm.muted = !bgm.muted;
-    if (bgm.paused && !bgm.muted) { var p = bgm.play(); if (p && p.catch) p.catch(function(){}); }
+    if (bgm.paused && !bgm.muted){ bgm.play().catch(function(){}); }
     render();
   });
   render();
